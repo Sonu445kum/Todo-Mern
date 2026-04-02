@@ -1,11 +1,24 @@
-import React from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import { useSelector } from "react-redux";
 
-const App = () => {
-  return (
-    <div className='text-3xl font-bold underline'>
-      hello sonu
-    </div>
-  )
+function PrivateRoute({ children }) {
+  const { user } = useSelector((state) => state.auth);
+  return user ? children : <Navigate to="/login" />;
 }
 
-export default App
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PrivateRoute><Dashboard/></PrivateRoute>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
